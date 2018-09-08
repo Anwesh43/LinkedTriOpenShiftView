@@ -28,12 +28,12 @@ fun Canvas.drawTOSNode(i : Int, scale : Float, paint : Paint) {
         save()
         scale(1f - 2 * j, 1f)
         save()
-        translate((w/2 - size) , 0f * sc2)
+        translate((w/2 - size) * sc2 + size/2, 0f * sc2)
         rotate(180f * sc2)
         val path : Path = Path()
-        path.moveTo(0f, -size/2)
-        path.lineTo(size * sc1, 0f)
-        path.lineTo(0f, size/2)
+        path.moveTo(-size/2, -size/2)
+        path.lineTo((size)/2 * sc1, 0f)
+        path.lineTo(-size/2, size/2)
         drawPath(path, paint)
         restore()
         restore()
@@ -145,6 +145,29 @@ class TriOpenShftView(ctx : Context) : View(ctx) {
             }
             cb()
             return this
+        }
+    }
+
+    data class LinkedTriOpenShift(var i : Int) {
+        private var root : TOSNode = TOSNode(0)
+        private var curr : TOSNode = root
+        private var dir : Int = 1
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            root.draw(canvas, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            curr.update {i, scl ->
+                curr = curr.getNext(dir) {
+                    dir *= -1
+                }
+                cb(i, scl)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            curr.startUpdating(cb)
         }
     }
 }
