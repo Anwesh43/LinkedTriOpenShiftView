@@ -103,4 +103,48 @@ class TriOpenShftView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class TOSNode(var i : Int) {
+        private val state : State = State()
+        private var next : TOSNode? = null
+        private var prev : TOSNode? = null
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = TOSNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        init {
+            addNeighbor()
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawTOSNode(i, state.scale, paint)
+            next?.draw(canvas, paint)
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : TOSNode {
+            var curr : TOSNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
+        }
+    }
 }
