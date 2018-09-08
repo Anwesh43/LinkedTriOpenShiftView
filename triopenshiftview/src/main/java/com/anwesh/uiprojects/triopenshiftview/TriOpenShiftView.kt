@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.triopenshiftview
  * Created by anweshmishra on 09/09/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.view.MotionEvent
 import android.content.Context
@@ -191,6 +192,14 @@ class TriOpenShiftView(ctx : Context) : View(ctx) {
             ltos.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : TriOpenShiftView {
+            val view : TriOpenShiftView = TriOpenShiftView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
