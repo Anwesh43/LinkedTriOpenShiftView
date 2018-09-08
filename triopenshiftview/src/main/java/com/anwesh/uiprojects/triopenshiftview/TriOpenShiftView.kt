@@ -20,9 +20,16 @@ fun Canvas.drawTOSNode(i : Int, scale : Float, paint : Paint) {
     val h : Float = height.toFloat()
     val gap : Float = h / (nodes + 1)
     paint.color = Color.parseColor("#3949AB")
+    paint.strokeWidth = Math.min(w, h) / 50
+    paint.strokeCap = Paint.Cap.ROUND
     val size : Float = gap/3
     val sc1 : Float = Math.min(0.5f, scale) * 2
     val sc2 : Float = Math.min(0.5f, Math.max(scale - 0.5f, 0f)) * 2
+    if (sc2 == 0f) {
+        paint.style = Paint.Style.FILL_AND_STROKE
+    } else {
+        paint.style = Paint.Style.FILL 
+    }
     save()
     translate(w/2, gap + gap * i)
     for(j in 0..1) {
@@ -33,7 +40,7 @@ fun Canvas.drawTOSNode(i : Int, scale : Float, paint : Paint) {
         rotate(180f * sc2)
         val path : Path = Path()
         path.moveTo(-size/2, -size/2)
-        path.lineTo((size)/2 * sc1, 0f)
+        path.lineTo(-size/2 + (size) * sc1, 0f)
         path.lineTo(-size/2, size/2)
         drawPath(path, paint)
         restore()
@@ -62,7 +69,7 @@ class TriOpenShiftView(ctx : Context) : View(ctx) {
 
     data class State(var scale : Float = 0f, var prevScale : Float = 0f, var dir : Float = 0f) {
         fun update(cb : (Float) -> Unit) {
-            scale += 0.1f * dir
+            scale += 0.05f * dir
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
