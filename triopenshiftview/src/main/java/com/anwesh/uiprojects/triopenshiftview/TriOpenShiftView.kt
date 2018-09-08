@@ -41,7 +41,7 @@ fun Canvas.drawTOSNode(i : Int, scale : Float, paint : Paint) {
     restore()
 }
 
-class TriOpenShftView(ctx : Context) : View(ctx) {
+class TriOpenShiftView(ctx : Context) : View(ctx) {
 
     private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -168,6 +168,28 @@ class TriOpenShftView(ctx : Context) : View(ctx) {
 
         fun startUpdating(cb : () -> Unit) {
             curr.startUpdating(cb)
+        }
+    }
+
+    data class Renderer(var view : TriOpenShiftView) {
+
+        private val animator : Animator = Animator(view)
+        private val ltos : LinkedTriOpenShift = LinkedTriOpenShift(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#BDBDBD"))
+            ltos.draw(canvas, paint)
+            animator.animate {
+                ltos.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            ltos.startUpdating {
+                animator.start()
+            }
         }
     }
 }
