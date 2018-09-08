@@ -28,7 +28,7 @@ fun Canvas.drawTOSNode(i : Int, scale : Float, paint : Paint) {
     if (sc2 == 0f) {
         paint.style = Paint.Style.FILL_AND_STROKE
     } else {
-        paint.style = Paint.Style.FILL 
+        paint.style = Paint.Style.FILL
     }
     save()
     translate(w/2, gap + gap * i)
